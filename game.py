@@ -29,9 +29,14 @@ default_position = (screen_width // 2, screen_height // 2)
 
 # 자막 리스트
 captions = [
-    ("대충 배경설명", 2),
-    ("대충 오프닝", 2),
-    ("대충 시작한다는 내용", 3)
+    ("나는 스페이스Z의 말단 회사원이였다.", 3),
+    ("인턴으로 일한지 벌써 12년째", 2),
+    ("드디어 나의 승진이 걸린 임무를 받았다.", 3),
+    ("화성으로 가라는 스페이스Z에 명령에 따라 ", 3),
+    ("화성으로 가서 비밀 프로젝트를 시작해야한다.", 3),
+    ("비밀 프로젝트는 바로 화성을 테라포밍할 기초를 마련하는 것", 3),
+    ("얼른 프로젝트를 끝내고 지구로 귀환하자.", 3),
+    ("승진하고 지구로 돌아가서 꼭 부모님께 효도해야지.", 3)
 ]
 
 # 버튼 위치 정의
@@ -156,14 +161,14 @@ if not has_seen_prologue(game_data):
         show_caption(caption, duration)
     save_prologue_seen(game_data)
 
-# 배경, 캐릭터 이미지 로딩 (예시용 사각형으로 대체)
-background = pygame.image.load("pics/marsBackground1.png")
+# 배경, 캐릭터 이미지 로딩
+background = pygame.image.load("pics/backgrounds/marsBackground1.png")
 background = pygame.transform.scale(background, (screen_width, screen_height))
 
-character_up_imgs = pygame.transform.scale(pygame.image.load(f"pics/gjtlan004.png"), (100, 100))
-character_down_imgs = pygame.transform.scale(pygame.image.load(f"pics/gjtlan001.png"), (100, 100))
-character_left_imgs = pygame.transform.scale(pygame.image.load(f"pics/gjtlan002.png"), (100, 100))
-character_right_imgs = pygame.transform.scale(pygame.image.load(f"pics/gjtlan003.png"), (100, 100))
+character_up_imgs = pygame.transform.scale(pygame.image.load(f"pics/players/gjtlan004.png"), (100, 100))
+character_down_imgs = pygame.transform.scale(pygame.image.load(f"pics/players/gjtlan001.png"), (100, 100))
+character_left_imgs = pygame.transform.scale(pygame.image.load(f"pics/players/gjtlan002.png"), (100, 100))
+character_right_imgs = pygame.transform.scale(pygame.image.load(f"pics/players/gjtlan003.png"), (100, 100))
                         
 direction = "down"  # 기본 방향
 
