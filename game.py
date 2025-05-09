@@ -3,6 +3,8 @@ import sys
 import json
 import os
 
+from player import Player
+
 # 초기 설정
 pygame.init()
 screen_info = pygame.display.Info()
@@ -46,16 +48,6 @@ captions = [
 continue_btn = pygame.Rect(screen_width // 2 - 150, screen_height // 2 - 50, 300, 80)
 restart_btn = pygame.Rect(screen_width // 2 - 150, screen_height // 2 + 70, 300, 80)
 
-def initialize_inventory():
-    return [
-        {
-            "name": "돔",
-            "image": "pics/items/dome.png",
-            "quantity": 1,
-            "durability": 100
-        }
-    ]
-
 def load_item_image(item_name):
     path = f"pics/UI/items/{item_name}.png"
     if os.path.exists(path):
@@ -68,7 +60,13 @@ def load_game_data():
         return {
             "prologue_seen": False,
             "player_position": default_position,
-            "inventory_slots": []
+            "inventory_slots": [
+                {
+                    "name": "돔",
+                    "image": "pics/UI/items/dome.png",
+                    "quantity": 1,
+                }
+            ]
         }
     with open(SAVE_FILE, "r", encoding="utf-8") as f:
         return json.load(f)
@@ -77,7 +75,6 @@ def load_game_data():
 
 def save_game_data(data):
     data["player_position"] = (char_x, char_y)
-    data["prologue_seen"] = True
     data["inventory"] = inventory_slots
     with open(SAVE_FILE, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4, ensure_ascii=False)
@@ -86,12 +83,6 @@ def reset_game_data():
     if os.path.exists(SAVE_FILE):
         os.remove(SAVE_FILE)
 
-def has_seen_prologue(data):
-    return data.get("prologue_seen", False)
-
-def save_prologue_seen(data):
-    data["prologue_seen"] = True
-    save_game_data(data)
 
 # UI 함수들
 
@@ -191,7 +182,6 @@ if choice == "restart":
         })
         for caption, duration in captions:
             show_caption(caption, duration)
-        save_prologue_seen(game_data)
         char_x, char_y = default_position
     else:
         char_x, char_y = game_data.get("player_position", default_position)
@@ -199,16 +189,6 @@ elif choice == "continue":
     char_x, char_y = game_data.get("player_position", default_position)
 
 inventory_slots = game_data.get("inventory", inventory_slots)
-
-# 이후 게임 로직에서 프롤로그 처음 보는 경우 처리
-if not has_seen_prologue(game_data):
-    # 인벤토리가 비어있다면 초기 아이템 추가
-    if not game_data.get("inventory_slots"):
-        game_data["inventory_slots"] = initialize_inventory()
-
-    for caption, duration in captions:
-        show_caption(caption, duration)
-    save_prologue_seen(game_data)
 
 # 메인 루프
 running = True
@@ -223,19 +203,7 @@ while running:
             if inventory_button_rect.collidepoint((mx, my)):
                 inventory_open = not inventory_open
 
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_LEFT] or keys[pygame.K_a]:
-        char_x -= char_speed
-        direction = "left"
-    if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-        char_x += char_speed
-        direction = "right"
-    if keys[pygame.K_UP] or keys[pygame.K_w]:
-        char_y -= char_speed
-        direction = "up"
-    if keys[pygame.K_DOWN] or keys[pygame.K_s]:
-        char_y += char_speed
-        direction = "down"
+    Player().update()
 
     # 캐릭터 방향 이미지 선택
     if direction == "up":
