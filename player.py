@@ -2,22 +2,32 @@ import pygame
 
 class Player:
     def __init__(self, x, y):
-        self.rect = pygame.Rect(x, y, 32, 32)
+        self.img = pygame.image.load("pics/players/gjtlan001.png")
         self.speed = 3
+        self.x, self.y = (x, y)
 
     def handle_event(self, event):
         pass
 
     def update(self):
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT]:
-            self.rect.x -= self.speed
-        elif keys[pygame.K_RIGHT]:
-            self.rect.x += self.speed
-        elif keys[pygame.K_UP]:
-            self.rect.y -= self.speed
-        elif keys[pygame.K_DOWN]:
-            self.rect.y += self.speed
+        moving = False
+        if keys[pygame.K_LEFT] or keys[pygame.K_a]:
+            self.x -= self.speed
+            direction = "left"
+            moving = True
+        if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+            self.x +=    self.speed
+            direction = "right"
+            moving = True
+        if keys[pygame.K_UP] or keys[pygame.K_w]:
+            self.y -=    self.speed
+            direction = "up"
+            moving = True
+        if keys[pygame.K_DOWN] or keys[pygame.K_s]:
+            self.y +=    self.speed
+            direction = "down"
+            moving = True
 
     def render(self, screen):
-        pygame.draw.rect(screen, (255, 255, 255), self.rect)
+        screen.blit(self.img, (self.x, self.y))

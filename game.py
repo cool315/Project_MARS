@@ -7,42 +7,13 @@ from player import Player
 
 # 초기 설정
 pygame.init()
-screen_info = pygame.display.Info()
-screen_width, screen_height = screen_info.current_w, screen_info.current_h
-screen = pygame.display.set_mode((screen_width, screen_height), pygame.FULLSCREEN)
-pygame.display.set_caption("산타듀밸리")
-
-clock = pygame.time.Clock()
-fps = 60
-
-# 색상 정의
-white = (255, 255, 255)
-black = (0, 0, 0)
-gray = (100, 100, 100)
-
-# 폰트 설정
-font_path = "font/neodgm.ttf"
-font = pygame.font.Font(font_path, 60)
-small_font = pygame.font.Font(font_path, 20)
 
 # 저장 파일 경로
 SAVE_FILE = "save/save_data.json"
-default_position = (screen_width // 2, screen_height // 2)
 
 # 인벤토리 설정
 inventory_rows, inventory_cols = 4, 9
 inventory_slots = [None] * (inventory_rows * inventory_cols)
-
-# 자막 리스트
-captions = [
-    ("나는 스페이스Z의 말단 회사원이였다.", 3),
-    ("인턴으로 일한지 벌써 12년째", 2),
-    ("드디어 나의 승진이 걸린 임무를 받았다.", 3),
-    ("화성으로 가라는 스페이스Z에 명령에 따라 ", 3),
-    ("화성으로 가서 비밀 프로젝트를 시작해야한다.", 3),
-    ("비밀 프로젝트는 바로 화성을 테라포밍하는 것", 3),
-    ("얼른 프로젝트를 끝내고 지구로 귀환하자.", 3)
-]
 
 # 버튼 위치 정의
 continue_btn = pygame.Rect(screen_width // 2 - 150, screen_height // 2 - 50, 300, 80)
@@ -91,14 +62,6 @@ def draw_button(text, rect, color, font):
     label = font.render(text, True, white)
     label_rect = label.get_rect(center=rect.center)
     screen.blit(label, label_rect)
-
-def show_caption(text, duration):
-    screen.fill(black)
-    label = font.render(text, True, white)
-    label_rect = label.get_rect(center=(screen_width / 2, screen_height / 2))
-    screen.blit(label, label_rect)
-    pygame.display.flip()
-    pygame.time.delay(duration * 1000)
 
 def show_load_menu():
     while True:
@@ -164,10 +127,6 @@ character_right_imgs = pygame.transform.scale(pygame.image.load("pics/players/gj
 direction = "down"
 inventory_open = False
 
-# 배경
-background = pygame.image.load("pics/backgrounds/marsBackground1.png")
-background = pygame.transform.scale(background, (screen_width, screen_height))
-
 # 불러오기/시작 처리
 game_data = load_game_data()
 choice = show_load_menu()
@@ -180,8 +139,6 @@ if choice == "restart":
             "player_position": default_position, 
             "inventory": inventory_slots
         })
-        for caption, duration in captions:
-            show_caption(caption, duration)
         char_x, char_y = default_position
     else:
         char_x, char_y = game_data.get("player_position", default_position)
@@ -203,8 +160,6 @@ while running:
             if inventory_button_rect.collidepoint((mx, my)):
                 inventory_open = not inventory_open
 
-    Player().update()
-
     # 캐릭터 방향 이미지 선택
     if direction == "up":
         current_img = character_up_imgs
@@ -215,9 +170,6 @@ while running:
     else:
         current_img = character_right_imgs
 
-    # 화면 그리기
-    screen.blit(background, (0, 0))
-    screen.blit(current_img, (char_x, char_y))
     screen.blit(inventory_icon, inventory_button_rect)
 
     if inventory_open:
