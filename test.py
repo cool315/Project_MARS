@@ -18,8 +18,17 @@ white = (255, 255, 255)
 black = (0, 0, 0)
 gray = (100, 100, 100)
 
+def resource_path(relative_path):
+    """ PyInstaller에서 리소스 파일 경로 찾기 """
+    try:
+        base_path = sys._MEIPASS  # PyInstaller가 설정하는 임시 디렉토리
+    except AttributeError:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
 # 폰트 설정
-font_path = "font/neodgm.ttf"
+font_path = resource_path("font/neodgm.ttf")
 font = pygame.font.Font(font_path, 60)
 small_font = pygame.font.Font(font_path, 20)
 

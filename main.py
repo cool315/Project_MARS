@@ -1,11 +1,9 @@
 import pygame
-import sys
 import json
-import os
 
-from player import Player
-from opening import Opening
-from setting import Color, Screen, clock, Font
+from py.player import Player
+from py.opening import Opening
+from py.setting import Color, Screen, clock, Font
 
 #초기 설정
 pygame.init()
