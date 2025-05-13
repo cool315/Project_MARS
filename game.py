@@ -3,7 +3,7 @@ import sys
 import json
 import os
 
-from player import Player
+from py.player import Player
 
 # 초기 설정
 pygame.init()
@@ -118,12 +118,6 @@ inventory_icon = pygame.image.load("pics/UI/BackpackIcon.png")
 inventory_icon = pygame.transform.scale(inventory_icon, (60, 60))
 inventory_button_rect = pygame.Rect(10, 10, 60, 60)
 
-# 캐릭터 이미지
-character_up_imgs = pygame.transform.scale(pygame.image.load("pics/players/gjtlan004.png"), (100, 100))
-character_down_imgs = pygame.transform.scale(pygame.image.load("pics/players/gjtlan001.png"), (100, 100))
-character_left_imgs = pygame.transform.scale(pygame.image.load("pics/players/gjtlan002.png"), (100, 100))
-character_right_imgs = pygame.transform.scale(pygame.image.load("pics/players/gjtlan003.png"), (100, 100))
-
 direction = "down"
 inventory_open = False
 
@@ -159,16 +153,6 @@ while running:
             mx, my = pygame.mouse.get_pos()
             if inventory_button_rect.collidepoint((mx, my)):
                 inventory_open = not inventory_open
-
-    # 캐릭터 방향 이미지 선택
-    if direction == "up":
-        current_img = character_up_imgs
-    elif direction == "down":
-        current_img = character_down_imgs
-    elif direction == "left":
-        current_img = character_left_imgs
-    else:
-        current_img = character_right_imgs
 
     screen.blit(inventory_icon, inventory_button_rect)
 
