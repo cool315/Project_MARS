@@ -1,4 +1,5 @@
 import pygame
+import os
 import json
 
 from py.player import Player
@@ -11,9 +12,17 @@ pygame.display.set_caption("산타듀밸리")
 screen = Screen.screen
 screen_width, screen_height = (Screen.screen_width, Screen.screen_height)
 
-player = Player(screen_width // 2, screen_height // 2)
+player = Player(screen_width // 2, screen_height // 2)#플레이어
 
-Opening().show_caption()
+# 저장 파일 경로
+SAVE_FILE = "save/save_data.json"
+
+
+if not os.path.exists(SAVE_FILE):
+    Opening().show_caption()
+else:
+    Opening().show_caption()
+    Opening().starting_menu()
 
 # 배경
 background = pygame.image.load("pics/backgrounds/marsBackground1.png")
@@ -34,5 +43,6 @@ while running:
 
     pygame.display.flip()
     clock.tick(60)
+
 
 pygame.quit()

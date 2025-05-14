@@ -22,6 +22,9 @@ class Opening:
             ("비밀 프로젝트는 바로 화성을 테라포밍하는 것", 1),
             ("얼른 프로젝트를 끝내고 지구로 귀환하자.", 1)
         ]
+        self.background = pygame.image.load("pics/alt.png")
+        self.background = pygame.transform.scale(self.background, (screen_width, screen_height))
+
     
     def show_caption(self):
         for text, duration in self.captions:
@@ -33,4 +36,4 @@ class Opening:
             pygame.time.delay(duration * 1000)
 
     def starting_menu(self):
-        
+        screen.blit(self.background, (0,0))

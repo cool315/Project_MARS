@@ -8,9 +8,6 @@ from py.player import Player
 # 초기 설정
 pygame.init()
 
-# 저장 파일 경로
-SAVE_FILE = "save/save_data.json"
-
 # 인벤토리 설정
 inventory_rows, inventory_cols = 4, 9
 inventory_slots = [None] * (inventory_rows * inventory_cols)
