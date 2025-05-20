@@ -4,6 +4,7 @@ import json
 
 from py.player import Player
 from py.opening import Opening
+from py.UI import UI
 from py.setting import Color, Screen, clock, Font
 
 #초기 설정
@@ -13,13 +14,14 @@ screen = Screen.screen
 screen_width, screen_height = (Screen.screen_width, Screen.screen_height)
 
 player = Player(screen_width // 2, screen_height // 2)#플레이어
+ui = UI()
 
 # 저장 파일 경로
 SAVE_FILE = "save/save_data.json"
 
 
 if not os.path.exists(SAVE_FILE):
-    Opening().show_caption()
+    Opening().show_opening()
 else:
     Opening().show_caption()
     Opening().starting_menu()
@@ -40,6 +42,7 @@ while running:
     #화면 그리기
     screen.blit(background, (0, 0))
     player.render(screen)
+    ui.render()
 
     pygame.display.flip()
     clock.tick(60)

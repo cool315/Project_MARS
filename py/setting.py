@@ -17,5 +17,5 @@ class Color:
 
 class Font:
     font_path = "font/neodgm.ttf"
-    font = pygame.font.Font(font_path, 60)
+    font = pygame.font.Font(font_path, int(Screen.screen_width // 23))
     small_font = pygame.font.Font(font_path, 20)
