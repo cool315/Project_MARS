@@ -1,15 +1,13 @@
 import pygame
-import os
-import json
 
 from py.player import Player
 from py.opening import Opening
 from py.UI import UI
-from py.setting import Color, Screen, clock, Font
+from py.setting import Color, Screen, clock, Font, Save
 
 #초기 설정
 pygame.init()
-pygame.display.set_caption("산타듀밸리")
+pygame.display.set_caption("프로젝트 MARS")
 screen = Screen.screen
 screen_width, screen_height = (Screen.screen_width, Screen.screen_height)
 
@@ -17,10 +15,10 @@ player = Player(screen_width // 2, screen_height // 2)#플레이어
 ui = UI()
 
 # 저장 파일 경로
-SAVE_FILE = "save/save_data.json"
+SAVE_FILE = Save().SAVE_FILE
 
 
-if not os.path.exists(SAVE_FILE):
+if not Save().IsSAVE_FILE:
     Opening().show_opening()
 else:
     Opening().show_caption()
@@ -42,6 +40,8 @@ while running:
     #화면 그리기
     screen.blit(background, (0, 0))
     player.render(screen)
+
+    ui.update()
     ui.render()
 
     pygame.display.flip()

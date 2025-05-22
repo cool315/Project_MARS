@@ -1,4 +1,6 @@
 import pygame
+import os
+import json
 
 pygame.init()
 
@@ -19,3 +21,16 @@ class Font:
     font_path = "font/neodgm.ttf"
     font = pygame.font.Font(font_path, int(Screen.screen_width // 23))
     small_font = pygame.font.Font(font_path, 20)
+
+class Save:
+    # 저장 파일 경로
+    SAVE_FILE = "save/save_data.json"
+    IsSAVE_FILE = os.path.exists(SAVE_FILE)
+
+    def load_game_data(self):
+        if not self.IsSAVE_FILE:
+            return {
+                
+            }
+        with open(self.SAVE_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
