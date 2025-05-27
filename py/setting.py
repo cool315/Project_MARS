@@ -15,12 +15,13 @@ class Screen:
 class Color:
     white = (255, 255, 255)
     black = (0, 0, 0)
-    gray = (100, 100, 100)
+    gray = (180, 180, 180)
+    dark_gray = (80, 80, 80)
 
 class Font:
     font_path = "font/neodgm.ttf"
     font = pygame.font.Font(font_path, int(Screen.screen_width // 23))
-    small_font = pygame.font.Font(font_path, 20)
+    small_font = pygame.font.Font(font_path, int(Screen.screen_width // 47))
 
 class Save:
     # 저장 파일 경로

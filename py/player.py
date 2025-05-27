@@ -16,27 +16,34 @@ class Player:
     def handle_event(self, event):
         pass
 
-    def update(self):
+    def update(self, block_rects=None):
+        if block_rects is None:
+            block_rects = []
+
         keys = pygame.key.get_pressed()
-        moving = False
+        old_x, old_y = self.x, self.y  # 이전 위치 저장
+
         if keys[pygame.K_LEFT] or keys[pygame.K_a]:
             self.x -= self.speed
             self.direction = "left"
-            moving = True
         if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-            self.x +=    self.speed
+            self.x += self.speed
             self.direction = "right"
-            moving = True
         if keys[pygame.K_UP] or keys[pygame.K_w]:
-            self.y -=    self.speed
+            self.y -= self.speed
             self.direction = "up"
-            moving = True
         if keys[pygame.K_DOWN] or keys[pygame.K_s]:
-            self.y +=    self.speed
+            self.y += self.speed
             self.direction = "down"
-            moving = True
 
-        # 캐릭터 방향 이미지 선택
+        # 충돌 확인용 rect
+        player_rect = pygame.Rect(self.x, self.y, self.img.get_width(), self.img.get_height())
+        for rect in block_rects:
+            if player_rect.colliderect(rect):
+                self.x, self.y = old_x, old_y  # 충돌 시 되돌림
+                break
+
+        # 방향 이미지 적용
         if self.direction == "up":
             self.img = character_up_imgs
         elif self.direction == "down":
@@ -45,6 +52,7 @@ class Player:
             self.img = character_left_imgs
         else:
             self.img = character_right_imgs
+
 
     def render(self, screen):
         screen.blit(self.img, (self.x, self.y))
