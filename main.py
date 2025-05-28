@@ -16,11 +16,13 @@ screen_width, screen_height = (Screen.screen_width, Screen.screen_height)
 player = Player(screen_width // 2 - 300, screen_height // 2 - 300)#플레이어
 ui = UI()
 spaceship = spaceShip()
+story = StoryManager()
+save = Save()
 
 # 저장 파일 경로
-SAVE_FILE = Save().SAVE_FILE
+SAVE_FILE = save.SAVE_FILE
 
-if not Save().IsSAVE_FILE:
+if not save.IsSAVE_FILE:
     Opening().show_opening()
 else:
     Opening().show_caption()
@@ -52,5 +54,11 @@ while running:
 
     pygame.display.flip()
     clock.tick(60)
+
+    if not save.IsSAVE_FILE:
+        story.chat_render(1)
+        save.create_game_data()
+    
+        
 
 pygame.quit()

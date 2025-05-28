@@ -35,3 +35,13 @@ class Save:
             }
         with open(self.SAVE_FILE, "r", encoding="utf-8") as f:
             return json.load(f)
+        
+    def create_game_data(self):
+        self.basic_game_data = {
+            "player": player_position,
+            "date": current_date,
+            "inventory": inventory
+
+        with open("save_file.json", "w", encoding="utf-8") as f:
+            json.dump(self.basic_game_data, f, indent=4)
+}
