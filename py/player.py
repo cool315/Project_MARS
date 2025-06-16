@@ -1,14 +1,14 @@
 import pygame
 
 # 캐릭터 이미지
-character_up_imgs = pygame.image.load("pics/players/gjtlan004.png")
-character_down_imgs = pygame.image.load("pics/players/gjtlan001.png")
-character_left_imgs = pygame.image.load("pics/players/gjtlan002.png")
-character_right_imgs = pygame.image.load("pics/players/gjtlan003.png")
+character_up_imgs = pygame.image.load("pics/players/elon004.png")
+character_down_imgs = pygame.image.load("pics/players/elon001.png")
+character_left_imgs = pygame.image.load("pics/players/elon002.png")
+character_right_imgs = pygame.image.load("pics/players/elon003.png")
 
 class Player:
     def __init__(self, x, y):
-        self.img = pygame.image.load("pics/players/gjtlan001.png")
+        self.img = pygame.image.load("pics/players/elon001.png")
         self.direction = "down"
         self.speed = 3
         self.x, self.y = (x, y)

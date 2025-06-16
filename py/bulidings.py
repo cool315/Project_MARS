@@ -15,16 +15,15 @@ black = Color().black
 class spaceShip:
     def __init__(self):
         self.img = pygame.image.load("pics/buildings/SpaceShip.png")
-        self.img = pygame.transform.scale(self.img, (screen_width // 8, screen_height//4))
+        self.img = pygame.transform.scale(self.img, (screen_width // 10, screen_height//4))
 
         self.x = screen_width // 2
         self.y = screen_height // 2
 
-        self.image_rect = self.img.get_rect(topleft=(self.x, self.y))
+        self.image_rect = self.img.get_rect(center=(self.x, self.y))
 
     def render(self):
-        screen.blit(self.img, (self.x, self.y))
-        self.image_rect.topleft = (self.x, self.y)
+        screen.blit(self.img, self.image_rect.topleft)
 
     def update(self):
         mouse_pos = pygame.mouse.get_pos()
@@ -37,3 +36,4 @@ class spaceShip:
 class Dome:
     def __init__(self):
         self.img = pygame.image.load("pics/buildings/domeBuilding1.png")
+        self.isPlaced = False

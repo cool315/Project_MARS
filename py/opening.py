@@ -1,6 +1,6 @@
 import pygame
 import cv2
-from py.setting import Font, Screen, Color
+from py.setting import Font, Screen, Color, Save
 
 screen = Screen.screen
 screen_width = Screen.screen_width
@@ -13,6 +13,8 @@ small_font = Font.small_font
 white = Color.white
 black = Color.black
 
+save = Save()
+
 class Opening:
     def __init__(self):
         self.captions = [
@@ -24,9 +26,12 @@ class Opening:
             ("비밀 프로젝트는 바로 화성을 테라포밍하는 것", 1),
             ("얼른 프로젝트를 끝내고 지구로 귀환하자.", 1)
         ]
+
         self.background = pygame.image.load("pics/opening/startMenu.png")
         self.background = pygame.transform.scale(self.background, (screen_width, screen_height))
         self.clock = pygame.time.Clock()
+
+        self.startButton = pygame.Rect(screen_width - screen_width // 6, screen_height // 8 * 7, screen_width // 6, screen_height // 8)
 
     def show_caption(self):
         for text, duration in self.captions:
@@ -45,9 +50,20 @@ class Opening:
                     running = False
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
+                        return("exit") 
                         running = False
-                        
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        if self.startButton.collidepoint(event.pos):
+                            return("start") 
+                            running = False
             screen.blit(self.background, (0, 0))
+
+            pygame.draw.rect(screen, black, self.startButton)
+            button_text = font.render("START", True, white)
+            text_rect = button_text.get_rect(center=self.startButton.center)
+            screen.blit(button_text, text_rect)
+
             pygame.display.flip()
 
     def scale_frame_to_screen(self, frame): #영상 화면 비율에 조정
