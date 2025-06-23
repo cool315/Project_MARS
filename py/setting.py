@@ -47,6 +47,7 @@ class Save:
                     "image": "pics/UI/items/DomeItem.png",
                     "buildingimage": "pics/buildings/domeBuilding1.png",
                     "IsBuilding": True,
+                    "buildingType": "dome",
                     "description": "돔 설치 도구\n\n돔을 건설할 수 있는 아이템입니다.\n원하는 위치에 클릭하여 기지를 건설하세요.",
                     "count": 1
                 }, None, None, None, None, None, None, None, None, None],

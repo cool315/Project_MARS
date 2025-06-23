@@ -15,11 +15,19 @@ screen_width, screen_height = (Screen.screen_width, Screen.screen_height)
 
 player = Player(screen_width // 2 - 300, screen_height // 2 - 300)#플레이어
 spaceship = spaceShip()
-dome = Dome()
+dome = Dome(0, 0, False)
 story = StoryManager()
 save = Save()
 
 save_data = None
+
+# 배경
+background = pygame.image.load("pics/backgrounds/marsBackground1.png")
+background = pygame.transform.scale(background, (screen_width, screen_height))
+
+backgroundName = "outside"
+is_inside_spaceship = False
+is_inside_dome = False
 
 inventory = [
     [None, None, None, None, None, None, None, None, None, None],
@@ -44,10 +52,6 @@ else:
 
 ui = UI(save_data)
 
-# 배경
-background = pygame.image.load("pics/backgrounds/marsBackground1.png")
-background = pygame.transform.scale(background, (screen_width, screen_height))
-
 running = True
 while running:
     #화면 그리기
@@ -56,16 +60,53 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-            running = False
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                running = False
+
+            elif event.key == pygame.K_e:
+                mouse_pos = pygame.mouse.get_pos()
+                if spaceship.rect.collidepoint(mouse_pos):
+                    is_inside_spaceship = not is_inside_spaceship  # 토글
+                    if is_inside_spaceship:
+                        background = pygame.image.load("pics/backgrounds/SpaceShipInside.png")
+                        player.x, player.y = screen_width // 2, screen_height // 5 * 4  # 우주선 내부 좌표
+                        player.sizeX, player.sizeY = screen_width // 30, screen_width // 15  # 플레이어 크기 조정
+                        backgroundName = "SpaceshipInside"
+                    else:
+                        background = pygame.image.load("pics/backgrounds/marsBackground1.png")
+                        player.x, player.y = screen_width // 2 - 300, screen_height // 2 - 300  # 바깥 좌표
+                        player.sizeX, player.sizeY = screen_width // 50, screen_width // 25
+                        backgroundName = "outside"
+                elif dome.rect.collidepoint(mouse_pos):
+                    is_inside_dome = not is_inside_dome
+                    if is_inside_dome:
+                        background = pygame.image.load("pics/backgrounds/DomeInside.png")
+                        player.x, player.y = (screen_width // 2 - player.sizeX) , screen_height // 2
+                        player.sizeX, player.sizeY = screen_width // 30, screen_width // 15
+                        backgroundName = "DomeInside"
+                    else:
+                        background = pygame.image.load("pics/backgrounds/marsBackground1.png")
+                        player.x, player.y = screen_width // 2 - 300, screen_height // 2 - 300  # 바깥 좌표
+                        player.sizeX, player.sizeY = screen_width // 50, screen_width // 25
+                        backgroundName = "outside"
+
+                # 배경 크기 조정
+                background = pygame.transform.scale(background, (screen_width, screen_height))
+
         ui.handle_event(event, inventory)
 
-    player.update(block_rects=[spaceship.image_rect])
+    player.update(block_rects=[spaceship.rect], backgroundName=backgroundName)
     ui.update()
     spaceship.update()
 
     player.render(screen)
     spaceship.render()
+    dome.x = ui.domeX
+    dome.y = ui.domeY
+    dome.IsPlaced = ui.IsDomePlaced
+    dome.render()
+
     ui.render(inventory)
 
     pygame.display.flip()
@@ -74,9 +115,9 @@ while running:
     if not save.IsSAVE_FILE:
         story.play_story(1)
         save.create_game_data((player.x, player.y), {
-            "sec": ui.sec, 
-            "min": ui.min, 
-            "hou": ui.hou, 
+            "sec": ui.sec,
+            "min": ui.min,
+            "hou": ui.hou,
             "day": ui.day
             })
         save_data = save.load_game_data()
