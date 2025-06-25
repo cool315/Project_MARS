@@ -78,13 +78,10 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
-                running = False
-
-            elif event.key == pygame.K_e:
+            if event.key == pygame.K_e:
                 mouse_pos = pygame.mouse.get_pos()
-                if spaceship.rect.collidepoint(mouse_pos):
-                    if not background.is_inside_spaceship:
+                if spaceship.rect.collidepoint(mouse_pos): #우주선 들어가기
+                    if background.backgroundName == "outside":
                         background.InsideSpaceShip()
 
                         player.x, player.y = screen_width // 2, screen_height // 7 * 5  # 우주선 내부 좌표
@@ -92,8 +89,8 @@ while running:
 
                         spaceship.IsPlaced = False
                         dome.IsPlaced = False
-                elif dome.rect.collidepoint(mouse_pos):
-                    if not background.is_inside_dome:
+                elif dome.rect.collidepoint(mouse_pos): #돔 들어가기
+                    if background.backgroundName == "outside":
                         background.InsideDome()
 
                         player.x, player.y = screen_width // 10 * 9, screen_height // 2  # 돔 내부 좌표
@@ -101,7 +98,7 @@ while running:
 
                         spaceship.IsPlaced = False
                         dome.IsPlaced = False
-                elif background.bed_rect and background.bed_rect.collidepoint(mouse_pos):
+                elif background.bed_rect and background.bed_rect.collidepoint(mouse_pos): # 침대 상호작용
                     if background.is_inside_dome:
                         screen.fill(black) #화면 전환
                         pygame.display.flip()
@@ -123,6 +120,13 @@ while running:
                         
                         save_data = load_data()
                         ui = UI(save_data, inventoryM)
+                elif background.monitor_rect and background.monitor_rect.collidepoint(mouse_pos): # 모니터 상호작용
+                    if background.is_inside_dome:
+                        background.computer()
+                        player.hidden = True
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if ui.exit_button_rect.collidepoint(event.pos):
+                running = False
         ui.handle_event(event, dome)
 
     if background.is_inside_spaceship:

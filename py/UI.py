@@ -18,6 +18,14 @@ hpUI = pygame.image.load("pics/UI/heartIcon.png")
 backpackUI = pygame.image.load("pics/UI/BackpackIcon.png")
 clockUI = pygame.image.load("pics/UI/clockIcon.png")
 clockUI = pygame.transform.scale(clockUI, (int(screen_width//5), screen_height//6))
+backpackActionUI = pygame.transform.scale(
+    pygame.image.load("pics/UI/backpackIcon.png"),
+    (screen_width // 50, screen_width // 50)
+)
+exitActionUI = pygame.transform.scale(
+    pygame.image.load("pics/UI/ExitIcon.png"),
+    (screen_width // 50, screen_width // 50)
+)
 
 menuIcon = pygame.image.load("pics/alt.png")
 
@@ -25,6 +33,25 @@ white = Color.white
 black = Color.black
 gray = Color.gray
 dark_gray = Color.dark_gray
+
+ROWS, COLS = 3, 10
+SLOT_SIZE = 50
+TEXT_HEIGHT = 16
+SLOT_MARGIN = 10
+SLOT_TOTAL_HEIGHT = SLOT_SIZE + TEXT_HEIGHT
+
+inventory_width = COLS * (SLOT_SIZE + SLOT_MARGIN) - SLOT_MARGIN
+inventory_height = ROWS * (SLOT_TOTAL_HEIGHT + SLOT_MARGIN) - SLOT_MARGIN
+padding = 40
+
+background_width = inventory_width + padding * 2
+background_height = inventory_height + padding * 6
+
+start_x = (screen_width - background_width) // 2
+start_y = (screen_height - background_height) // 2
+
+slots_start_x = start_x + padding
+slots_start_y = start_y + background_height - padding - inventory_height
 
 class UI:
     def __init__(self, save_data, inventoryM):
@@ -43,6 +70,9 @@ class UI:
 
         self.show_inventory = False  # ← 인벤토리 표시 여부
         self.backpack_rect = backpackUI.get_rect(topleft=(0, 0))
+        self.exit_button_rect = pygame.Rect(300, 250, 200, 60)  # x, y, 너비, 높이
+        self.backpackAc_rect = backpackActionUI.get_rect(topleft=(0,0))
+        self.exitAc_rect = exitActionUI.get_rect(topleft=(0,0))
 
         self.domeX = screen_width // 2
         self.domeY = screen_height // 2
@@ -52,15 +82,11 @@ class UI:
 
         self.inventoryM = inventoryM
 
-    def render(self, background):
-        screen.blit(backpackUI, (0, 0))
+        self.actionbar = ["inventory", "quest", "exit"]
+        self.selected_action = 0
 
-        screen.blit(clockUI, (screen_width - clockUI.get_width(), 0))
-        if background == "SpaceshipInside" or background == "DomeInside":
-            screen.blit((font.render(f"D+ {self.day}", True, white)), (screen_width - 120, 0))
-        else:
-            screen.blit((font.render(f"D+ {self.day}", True, black)), (screen_width - 120, 0))
-        screen.blit(self.timeUI, (screen_width - clockUI.get_width()*0.7, clockUI.get_width()*0.3))
+    def render(self, background):
+        self.draw_playerUI(background)
 
         # 마우스를 따라다니는 설치 준비 아이템
         if not self.selected_item == None and self.selected_item['IsBuilding']:
@@ -71,7 +97,11 @@ class UI:
             screen.blit(img, (mouse_x - 25, mouse_y - 25))  # 중심에 맞춰 위치
 
         if self.show_inventory:
-            self.draw_inventory(self.inventoryM.inventory)
+            self.draw_basic_menu()
+            if self.actionbar[self.selected_action] == "inventory":
+                self.draw_inventory(self.inventoryM.inventory)
+            elif self.actionbar[self.selected_action] == "exit":
+                self.draw_exit()
 
     def handle_event(self, event, dome):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
@@ -83,21 +113,6 @@ class UI:
 
             if self.show_inventory:
                 # 인벤토리가 열려 있을 때 슬롯 클릭 감지
-                ROWS, COLS = 3, 10
-                SLOT_SIZE = 50
-                TEXT_HEIGHT = 16
-                SLOT_MARGIN = 10
-                SLOT_TOTAL_HEIGHT = SLOT_SIZE + TEXT_HEIGHT
-                inventory_width = COLS * (SLOT_SIZE + SLOT_MARGIN) - SLOT_MARGIN
-                inventory_height = ROWS * (SLOT_TOTAL_HEIGHT + SLOT_MARGIN) - SLOT_MARGIN
-                padding = 40
-                background_width = inventory_width + padding * 2
-                background_height = inventory_height + padding * 6
-                start_x = (screen_width - background_width) // 2
-                start_y = (screen_height - background_height) // 2
-                slots_start_x = start_x + padding
-                slots_start_y = start_y + background_height - padding - inventory_height
-
                 for row in range(ROWS):
                     for col in range(COLS):
                         slot_x = slots_start_x + col * (SLOT_SIZE + SLOT_MARGIN)
@@ -123,7 +138,12 @@ class UI:
 
                         self.selected_item = None  # 아이템 선택 해제
                         self.selected_item_pos = None
-
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if self.backpackAc_rect.collidepoint(event.pos):
+                self.selected_action = 0
+            elif self.exitAc_rect.collidepoint(event.pos):
+                self.selected_action = 2
+    
     def update(self):
         self.sec += 1
         if self.sec >= 60:
@@ -144,31 +164,32 @@ class UI:
         for i, line in enumerate(lines):
             rendered = font.render(line, True, color)
             surface.blit(rendered, (x, y + i * font.get_height()))
-        
-    def draw_inventory(self, inventory):
-        ROWS, COLS = 3, 10
-        SLOT_SIZE = 50
-        TEXT_HEIGHT = 16
-        SLOT_MARGIN = 10
-        SLOT_TOTAL_HEIGHT = SLOT_SIZE + TEXT_HEIGHT
+    
+    def draw_playerUI(self, background):
+        screen.blit(backpackUI, (0, 0))
 
-        inventory_width = COLS * (SLOT_SIZE + SLOT_MARGIN) - SLOT_MARGIN
-        inventory_height = ROWS * (SLOT_TOTAL_HEIGHT + SLOT_MARGIN) - SLOT_MARGIN
-        padding = 40
+        screen.blit(clockUI, (screen_width - clockUI.get_width(), 0))
+        if background == "SpaceshipInside" or background == "DomeInside":
+            screen.blit((font.render(f"D+ {self.day}", True, white)), (screen_width - 120, 0))
+        else:
+            screen.blit((font.render(f"D+ {self.day}", True, black)), (screen_width - 120, 0))
+        screen.blit(self.timeUI, (screen_width - clockUI.get_width()*0.7, clockUI.get_width()*0.3))
 
-        background_width = inventory_width + padding * 2
-        background_height = inventory_height + padding * 6
-
-        start_x = (screen_width - background_width) // 2
-        start_y = (screen_height - background_height) // 2
-
-        # 배경 그리기
+    def draw_basic_menu(self):
         pygame.draw.rect(screen, black, (start_x, start_y, background_width, background_height))
 
-        # 슬롯들이 그려질 영역 시작 좌표 (배경 내부, 아래쪽 정렬)
-        slots_start_x = start_x + padding
-        slots_start_y = start_y + background_height - padding - inventory_height
+        screen.blit(backpackActionUI, (start_x, start_y - backpackActionUI.get_height()))
+        screen.blit(exitActionUI, (start_x + backpackActionUI.get_width(), start_y - exitActionUI.get_height()))
 
+    def draw_exit(self):
+        pygame.draw.rect(screen, white, self.exit_button_rect, border_radius=10)
+
+        # 텍스트 그리기
+        text_surface = font.render("종료하기", True, red)
+        text_rect = text_surface.get_rect(center=self.exit_button_rect.center)
+        screen.blit(text_surface, text_rect)
+
+    def draw_inventory(self, inventory):
         mouse_x, mouse_y = pygame.mouse.get_pos()
         show_tooltip = False
         tooltip_text = ""

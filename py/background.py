@@ -9,6 +9,7 @@ screen_width, screen_height = Screen().screen_width, Screen().screen_height
 small_font = Font().small_font
 
 black = Color.black
+white = Color.white
 
 class backgroundElementControl:
     def __init__(self, background):
@@ -41,6 +42,9 @@ class backgroundElementControl:
             if self.bed_rect and self.bed_rect.collidepoint(mouse_pos):
                 tooltip = small_font.render("e키를 눌러서 잠자기", True, black)
                 screen.blit(tooltip, (self.bed_rect.right + 10, self.bed_rect.top))
+            elif self.monitor_rect and self.monitor_rect.collidepoint(mouse_pos):
+                tooltip = small_font.render("e키를 눌러서 컴퓨터 들어가기", True, white)
+                screen.blit(tooltip, (self.bed_rect.right + 10, self.bed_rect.top))
 
     def outSide(self):
         self.background = pygame.image.load("pics/backgrounds/marsBackground1.png")
@@ -51,7 +55,6 @@ class backgroundElementControl:
         self.is_inside_dome = False
 
         self.backgroundItems = None
-        self.bed_rect = None
 
     def InsideSpaceShip(self):
         self.background = pygame.image.load("pics/backgrounds/SpaceShipInside.png")
@@ -61,7 +64,6 @@ class backgroundElementControl:
         self.is_inside_spaceship = True
 
         self.backgroundItems = None
-        self.bed_rect = None
 
     def InsideDome(self):
         self.background = pygame.image.load("pics/backgrounds/DomeInside.png")
@@ -86,3 +88,14 @@ class backgroundElementControl:
             (self.bed, self.bed_x, self.bed_y),
             (self.monitor, monitor_x, monitor_y)
         ]
+
+    def computer(self):
+        self.background = pygame.image.load("pics/backgrounds/windowXp.png")
+        self.background = pygame.transform.scale(self.background, (screen_width, screen_height))
+        self.backgroundName = "Computer"
+
+        self.is_inside_dome = False
+
+        self.backgroundItems = None
+
+
