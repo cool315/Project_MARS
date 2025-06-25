@@ -14,7 +14,7 @@ class Screen:
 
 class Color:
     white = (255, 255, 255)
-    black = (0, 0, 0)
+    black = (1, 1, 1)
     gray = (180, 180, 180)
     dark_gray = (80, 80, 80)
 
@@ -36,29 +36,33 @@ class Save:
         
     def create_game_data(self, player_position, Clock):
         self.basic_game_data = {
-            "player": player_position,
+            "playerPos": player_position,
+            "playerSize": (Screen.screen_width // 50, Screen.screen_width // 25),
             "sec": Clock["sec"],
             "min": Clock["min"],
             "hou": Clock["hou"],
             "day": Clock["day"],
             "inventory": [
-                [{
-                    "name": "돔 설치 도구",
-                    "image": "pics/UI/items/DomeItem.png",
-                    "buildingimage": "pics/buildings/domeBuilding1.png",
-                    "IsBuilding": True,
-                    "buildingType": "dome",
-                    "description": "돔 설치 도구\n\n돔을 건설할 수 있는 아이템입니다.\n원하는 위치에 클릭하여 기지를 건설하세요.",
-                    "count": 1
-                }, None, None, None, None, None, None, None, None, None],
-                [None, None, None, None, None, None, None, None, None, None],
-                [None, None, None, None, None, None, None, None, None, None]
-            ]
+                    [{
+                        "name": "돔 설치 도구",
+                        "image": "pics/UI/items/DomeItem.png",
+                        "buildingimage": "pics/buildings/domeBuilding1.png",
+                        "IsBuilding": True,
+                        "buildingType": "dome",
+                        "description": "돔 설치 도구\n\n돔을 건설할 수 있는 아이템입니다.\n원하는 위치에 클릭하여 기지를 건설하세요.",
+                        "count": 1
+                    }, None, None, None, None, None, None, None, None, None],
+                    [None, None, None, None, None, None, None, None, None, None],
+                    [None, None, None, None, None, None, None, None, None, None]
+                ],
+            "background": "outside",
+            "IsDomeCons": False,
+            "DomePos": (0, 0)
         }
         with open("save/save_file.json", "w", encoding="utf-8") as f:
             json.dump(self.basic_game_data, f, indent=4)
         self.IsSAVE_FILE = True
 
-    def save_game_data(data):
+    def save_game_data(self, data):
         with open("save/save_file.json", "w", encoding="utf-8") as f:
             json.dump(data, f, indent=4)

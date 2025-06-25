@@ -19,12 +19,9 @@ class Player:
     def handle_event(self, event):
         pass
 
-    def update(self, block_rects=None, backgroundName=""):
-        if block_rects is None:
-            block_rects = []
-
+    def update(self, screen_surface=None, backgroundName=""):
         keys = pygame.key.get_pressed()
-        old_x, old_y = self.x, self.y  # 이전 위치 저장
+        old_x, old_y = self.x, self.y
 
         if keys[pygame.K_LEFT] or keys[pygame.K_a]:
             self.x -= self.speed
@@ -43,17 +40,37 @@ class Player:
             self.direction = 1
             self.moving += 1
 
-        # 충돌 확인용 rect
-        player_rect = pygame.Rect(self.x, self.y, self.img.get_width(), self.img.get_height())
-        for rect in block_rects:
-            if player_rect.colliderect(rect):
-                self.x, self.y = old_x, old_y  # 충돌 시 되돌림
-                break
+        # 충돌 영역 체크
+        if screen_surface:
+            player_rect = pygame.Rect(self.x, self.y, self.sizeX, self.sizeY)
+            hit_black = False
+
+            # 여러 점 검사 (좌상, 우상, 좌하, 우하, 중심)
+            points = [
+                player_rect.topleft,
+                player_rect.topright,
+                player_rect.bottomleft,
+                player_rect.bottomright,
+                player_rect.center,
+            ]
+
+            for px, py in points:
+                if 0 <= px < screen_surface.get_width() and 0 <= py < screen_surface.get_height():
+                    color = screen_surface.get_at((px, py))
+                    if color[:3] == (0, 0, 0):  # 검정
+                        hit_black = True
+                        break
+
+            if hit_black:
+                self.x, self.y = old_x, old_y  # 이동 취소
+
 
         if(backgroundName == "outside"):
             self.IsHelmet = 2
+            self.speed = 3
         else:
             self.IsHelmet = 1
+            self.speed = 5
 
         self.movingNum = (self.moving // self.speed)
         if(self.movingNum >= 3):

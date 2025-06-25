@@ -14,7 +14,6 @@ font = Font().font
 small_font = Font().small_font
 item_font = Font().item_font
 
-
 hpUI = pygame.image.load("pics/UI/heartIcon.png")
 backpackUI = pygame.image.load("pics/UI/BackpackIcon.png")
 clockUI = pygame.image.load("pics/UI/clockIcon.png")
@@ -28,7 +27,7 @@ gray = Color.gray
 dark_gray = Color.dark_gray
 
 class UI:
-    def __init__(self, save_data):
+    def __init__(self, save_data, inventoryM):
         if not Save().IsSAVE_FILE:
             self.sec = 0
             self.min = 0
@@ -51,11 +50,16 @@ class UI:
 
         self.selected_item = None  # 선택된 아이템
 
-    def render(self, inventory):
+        self.inventoryM = inventoryM
+
+    def render(self, background):
         screen.blit(backpackUI, (0, 0))
 
         screen.blit(clockUI, (screen_width - clockUI.get_width(), 0))
-        screen.blit((font.render(f"D+ {self.day}", True, black)), (screen_width - 120, 0))
+        if background == "SpaceshipInside" or background == "DomeInside":
+            screen.blit((font.render(f"D+ {self.day}", True, white)), (screen_width - 120, 0))
+        else:
+            screen.blit((font.render(f"D+ {self.day}", True, black)), (screen_width - 120, 0))
         screen.blit(self.timeUI, (screen_width - clockUI.get_width()*0.7, clockUI.get_width()*0.3))
 
         # 마우스를 따라다니는 설치 준비 아이템
@@ -67,9 +71,9 @@ class UI:
             screen.blit(img, (mouse_x - 25, mouse_y - 25))  # 중심에 맞춰 위치
 
         if self.show_inventory:
-            self.draw_inventory(inventory)
+            self.draw_inventory(self.inventoryM.inventory)
 
-    def handle_event(self, event, inventory):
+    def handle_event(self, event, dome):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             mouse_x, mouse_y = event.pos
 
@@ -100,19 +104,25 @@ class UI:
                         slot_y = slots_start_y + row * (SLOT_TOTAL_HEIGHT + SLOT_MARGIN)
                         slot_rect = pygame.Rect(slot_x, slot_y, SLOT_SIZE, SLOT_SIZE)
                         if slot_rect.collidepoint(mouse_x, mouse_y):
-                            item = inventory[row][col]
+                            item = self.inventoryM.inventory[row][col]
                             if item is not None:
                                 self.selected_item = item
+                                self.selected_item_pos = (row, col)
                                 if self.selected_item['IsBuilding']:
                                     self.show_inventory = False  # 인벤토리 닫기
                             return
             else:
                 if self.selected_item is not None and self.selected_item['IsBuilding']:
                     if self.selected_item['buildingType'] == "dome":
-                        self.IsDomePlaced = True
-                        self.domeX, self.domeY = pygame.mouse.get_pos()
+                        dome.IsConstructed = True
+                        dome.IsPlaced = True
+                        dome.x, dome.y = pygame.mouse.get_pos()
+
+                        sel_row, sel_col = self.selected_item_pos
+                        self.inventoryM.inventory[sel_row][sel_col] = None
 
                         self.selected_item = None  # 아이템 선택 해제
+                        self.selected_item_pos = None
 
     def update(self):
         self.sec += 1
