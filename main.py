@@ -11,6 +11,8 @@ from py.chat import StoryManager
 from py.bulidings import spaceShip, Dome
 from py.background import backgroundElementControl
 from py.inventory import inventoryManage
+from py.ending import Ending
+from py.plant import Plant
 
 #초기 설정
 pygame.init()
@@ -32,6 +34,11 @@ inventoryM = inventoryManage()
 
 black = Color.black
 white = Color.white
+
+opening = Opening()
+ending = Ending()
+
+plant = Plant()
 
 # 저장 파일 경로
 SAVE_FILE = save.SAVE_FILE
@@ -57,10 +64,10 @@ def load_data():
 
 
 if not save.IsSAVE_FILE:
-    Opening().show_opening()
+    opening.show_opening()
 else:
-    Opening().show_caption()
-    satrtMenu = Opening().starting_menu()
+    opening.show_caption()
+    satrtMenu = opening.starting_menu()
 
     if satrtMenu == "exit":
         pygame.quit()
@@ -124,6 +131,8 @@ while running:
                     if background.is_inside_dome:
                         background.computer()
                         player.hidden = True
+            elif event.key == pygame.K_DELETE:
+                ending.ending(screen, background.background)
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if ui.exit_button_rect.collidepoint(event.pos):
                 running = False
@@ -148,10 +157,21 @@ while running:
             spaceship.IsPlaced = True
             dome.IsPlaced = True
         elif player.x < 0:
-            player.x, player.y = screen_width // 2, screen_height // 2
+            player.x, player.y = screen_width // 8* 6 - 10, screen_height // 5 * 3
             player.sizeX, player.sizeY = screen_width // 50, screen_width // 25
 
             background.insideGreenHouse()
+    elif background.backgroundName == "GreenHouse":
+        plant.render()
+        
+        if player.x > screen_width // 8 * 6:
+            background.InsideDome()
+
+            player.x, player.y = screen_width // 10, screen_height // 2  # 돔 내부 좌표
+            player.sizeX, player.sizeY = screen_width // 30, screen_width // 15  # 플레이어 크기 조정
+
+            spaceship.IsPlaced = False
+            dome.IsPlaced = False
 
     background.update()
     player.update(screen_surface=screen, backgroundName=background.backgroundName)
@@ -178,6 +198,8 @@ while running:
             })
         save_data = load_data()
         ui = UI(save_data, inventoryM)
+
+    
 
         
 

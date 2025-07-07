@@ -106,4 +106,4 @@ class backgroundElementControl:
         self.is_inside_dome = False
 
         self.backgroundItems = None
-        
+
