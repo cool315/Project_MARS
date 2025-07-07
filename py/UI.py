@@ -33,6 +33,7 @@ white = Color.white
 black = Color.black
 gray = Color.gray
 dark_gray = Color.dark_gray
+red = Color.red
 
 ROWS, COLS = 3, 10
 SLOT_SIZE = 50
@@ -111,6 +112,11 @@ class UI:
                 self.show_inventory = not self.show_inventory
                 return  # 더 이상 처리하지 않음
 
+            if self.backpackAc_rect.collidepoint(event.pos):
+                self.selected_action = 0
+            elif self.exitAc_rect.collidepoint(event.pos):
+                self.selected_action = 2
+
             if self.show_inventory:
                 # 인벤토리가 열려 있을 때 슬롯 클릭 감지
                 for row in range(ROWS):
@@ -138,11 +144,8 @@ class UI:
 
                         self.selected_item = None  # 아이템 선택 해제
                         self.selected_item_pos = None
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            if self.backpackAc_rect.collidepoint(event.pos):
-                self.selected_action = 0
-            elif self.exitAc_rect.collidepoint(event.pos):
-                self.selected_action = 2
+
+
     
     def update(self):
         self.sec += 1
@@ -178,8 +181,14 @@ class UI:
     def draw_basic_menu(self):
         pygame.draw.rect(screen, black, (start_x, start_y, background_width, background_height))
 
-        screen.blit(backpackActionUI, (start_x, start_y - backpackActionUI.get_height()))
-        screen.blit(exitActionUI, (start_x + backpackActionUI.get_width(), start_y - exitActionUI.get_height()))
+        backpack_pos = (start_x, start_y - backpackActionUI.get_height())
+        exit_pos = (start_x + backpackActionUI.get_width(), start_y - exitActionUI.get_height())
+
+        self.backpackAc_rect.topleft = backpack_pos
+        self.exitAc_rect.topleft = exit_pos  # ← 여기 추가!
+
+        screen.blit(backpackActionUI, backpack_pos)
+        screen.blit(exitActionUI, exit_pos)
 
     def draw_exit(self):
         pygame.draw.rect(screen, white, self.exit_button_rect, border_radius=10)

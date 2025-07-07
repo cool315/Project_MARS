@@ -17,6 +17,7 @@ class Color:
     black = (1, 1, 1)
     gray = (180, 180, 180)
     dark_gray = (80, 80, 80)
+    red = (255, 0, 0)
 
 class Font:
     font_path = "font/neodgm.ttf"

@@ -98,4 +98,12 @@ class backgroundElementControl:
 
         self.backgroundItems = None
 
+    def insideGreenHouse(self):
+        self.background = pygame.image.load("pics/backgrounds/PlantingRoom.png")
+        self.background = pygame.transform.scale(self.background, (screen_width, screen_height))
+        self.backgroundName = "GreenHouse"
 
+        self.is_inside_dome = False
+
+        self.backgroundItems = None
+        

@@ -147,6 +147,11 @@ while running:
 
             spaceship.IsPlaced = True
             dome.IsPlaced = True
+        elif player.x < 0:
+            player.x, player.y = screen_width // 2, screen_height // 2
+            player.sizeX, player.sizeY = screen_width // 50, screen_width // 25
+
+            background.insideGreenHouse()
 
     background.update()
     player.update(screen_surface=screen, backgroundName=background.backgroundName)
