@@ -1,6 +1,6 @@
 import pygame
 import cv2
-from py.setting import Font, Screen, Color, Save
+from py.setting import Font, Screen, Color, Save, resource_path
 
 screen = Screen.screen
 screen_width = Screen.screen_width
@@ -27,7 +27,7 @@ class Opening:
             ("얼른 프로젝트를 끝내고 지구로 귀환하자.", 3)
         ]
 
-        self.background = pygame.image.load("pics/opening/startMenu.png")
+        self.background = pygame.image.load(resource_path("pics/opening/startMenu.png"))
         self.background = pygame.transform.scale(self.background, (screen_width, screen_height))
         self.clock = pygame.time.Clock()
 
@@ -69,7 +69,6 @@ class Opening:
                 if elapsed >= duration * 1000:
                     break
 
-
     def starting_menu(self):
         running = True
         while running:
@@ -106,7 +105,7 @@ class Opening:
         return resized_frame, (x, y)
 
     def show_opening(self):
-        cap = cv2.VideoCapture("") #여기다 인트로 영상
+        cap = cv2.VideoCapture(resource_path("")) #video/intro.mp4
         fps = cap.get(cv2.CAP_PROP_FPS)
         if fps <= 1 or fps > 60:
             fps = 30

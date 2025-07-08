@@ -25,3 +25,7 @@ class StoryManager:
             self.chat_render("드디어 화성에 도착했다" ,2)
             self.chat_render("먼저 가방에서 돔 설치 도구를 꺼내 돔을 건설하자" ,3)
             self.chat_render("돔을 건설 한 후 컴퓨터를 열어 본부에 연락을 취해야지" ,4)
+        elif (story_number == 2):
+            self.chat_render("이게 무슨 소리지?" ,2)
+            self.chat_render("화성의 모래폭풍이라니" ,3)
+            self.chat_render("제발 아무 일 없이 지나가기를.." ,3)

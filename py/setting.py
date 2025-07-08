@@ -1,10 +1,18 @@
 import pygame
 import os
 import json
+import sys
 
 pygame.init()
 
 clock = pygame.time.Clock()
+
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except AttributeError:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
 
 class Screen:
     screen_info = pygame.display.Info()
@@ -20,14 +28,14 @@ class Color:
     red = (255, 0, 0)
 
 class Font:
-    font_path = "font/neodgm.ttf"
+    font_path = resource_path("font/neodgm.ttf")
     font = pygame.font.Font(font_path, int(Screen.screen_width // 23))
     small_font = pygame.font.Font(font_path, int(Screen.screen_width // 47))
     item_font = pygame.font.Font(font_path, int(Screen.screen_width // 120))
 
 class Save:
     # 저장 파일 경로
-    SAVE_FILE = "save/save_file.json"
+    SAVE_FILE = resource_path("save/save_file.json")
     IsSAVE_FILE = os.path.exists(SAVE_FILE)
 
     def load_game_data(self):
@@ -39,6 +47,7 @@ class Save:
         self.basic_game_data = {
             "playerPos": player_position,
             "playerSize": (Screen.screen_width // 50, Screen.screen_width // 25),
+            "playerSpeed": 3,
             "sec": Clock["sec"],
             "min": Clock["min"],
             "hou": Clock["hou"],
@@ -47,18 +56,28 @@ class Save:
                     [{
                         "name": "돔 설치 도구",
                         "image": "pics/UI/items/DomeItem.png",
-                        "buildingimage": "pics/buildings/domeBuilding1.png",
+                        "placeimage": "pics/buildings/domeBuilding1.png",
                         "IsBuilding": True,
-                        "buildingType": "dome",
+                        "IsSeed": False,
+                        "IsFood": False,
+                        "foodValue": None,
+                        "placeType": "dome",
                         "description": "돔 설치 도구\n\n돔을 건설할 수 있는 아이템입니다.\n원하는 위치에 클릭하여 기지를 건설하세요.",
                         "count": 1
-                    }, None, None, None, None, None, None, None, None, None],
+                    }, None, None, None, None, None, None, None],
                     [None, None, None, None, None, None, None, None, None, None],
                     [None, None, None, None, None, None, None, None, None, None]
                 ],
             "background": "outside",
             "IsDomeCons": False,
-            "DomePos": (0, 0)
+            "DomePos": (0, 0),
+            "greenHouse": [
+                [{"dirtStatus": "dry"}, {"dirtStatus": "dry"}, {"dirtStatus": "dry"}, {"dirtStatus": "dry"}, {"dirtStatus": "dry"}],
+                [{"dirtStatus": "dry"}, {"dirtStatus": "dry"}, {"dirtStatus": "dry"}, {"dirtStatus": "dry"}, {"dirtStatus": "dry"}],
+                [{"dirtStatus": "dry"}, {"dirtStatus": "dry"}, {"dirtStatus": "dry"}, {"dirtStatus": "dry"}, {"dirtStatus": "dry"}],
+                [{"dirtStatus": "dry"}, {"dirtStatus": "dry"}, {"dirtStatus": "dry"}, {"dirtStatus": "dry"}, {"dirtStatus": "dry"}],
+                [{"dirtStatus": "dry"}, {"dirtStatus": "dry"}, {"dirtStatus": "dry"}, {"dirtStatus": "dry"}, {"dirtStatus": "dry"}],
+            ]
         }
         with open("save/save_file.json", "w", encoding="utf-8") as f:
             json.dump(self.basic_game_data, f, indent=4)

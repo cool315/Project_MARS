@@ -1,11 +1,11 @@
 import pygame
-from py.setting import Screen
+from py.setting import Screen, resource_path
 
 screen_width, screen_height = (Screen.screen_width, Screen.screen_height)
 
 class Player:
     def __init__(self, x, y):
-        self.img = pygame.image.load("pics/players/elon210.png")
+        self.img = pygame.image.load(resource_path("pics/players/elon210.png"))
 
         self.IsHelmet = 2 # 2= ture, 1= false
         self.direction = 1 # 1= 정면, 2=왼쪽, 3=오른쪽, 4=후면
@@ -66,10 +66,8 @@ class Player:
 
             if(backgroundName == "outside"):
                 self.IsHelmet = 2
-                self.speed = 3
             else:
                 self.IsHelmet = 1
-                self.speed = 5
 
             self.movingNum = (self.moving // self.speed)
             if(self.movingNum >= 3):
@@ -88,7 +86,7 @@ class Player:
                 else:
                     self.movingNum = 2
 
-            self.img = pygame.image.load(f"pics/players/elon{self.IsHelmet}{self.direction}{self.movingNum}.png")
+            self.img = pygame.image.load(resource_path(f"pics/players/elon{self.IsHelmet}{self.direction}{self.movingNum}.png"))
             self.img = pygame.transform.scale(self.img, (self.sizeX, self.sizeY))
 
             screen.blit(self.img, (self.x, self.y))

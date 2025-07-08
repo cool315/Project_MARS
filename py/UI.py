@@ -3,7 +3,7 @@ import pygame
 import pygame.image
 import pygame.transform
 
-from py.setting import Font, Screen, Color, Save
+from py.setting import Font, Screen, Color, Save, resource_path
 from py.bulidings import BUILDING_CLASSES
 
 screen = Screen().screen
@@ -14,20 +14,18 @@ font = Font().font
 small_font = Font().small_font
 item_font = Font().item_font
 
-hpUI = pygame.image.load("pics/UI/heartIcon.png")
-backpackUI = pygame.image.load("pics/UI/BackpackIcon.png")
-clockUI = pygame.image.load("pics/UI/clockIcon.png")
+hpUI = pygame.image.load(resource_path("pics/UI/heartIcon.png"))
+backpackUI = pygame.image.load(resource_path("pics/UI/BackpackIcon.png"))
+clockUI = pygame.image.load(resource_path("pics/UI/clockIcon.png"))
 clockUI = pygame.transform.scale(clockUI, (int(screen_width//5), screen_height//6))
 backpackActionUI = pygame.transform.scale(
-    pygame.image.load("pics/UI/backpackIcon.png"),
+    pygame.image.load(resource_path("pics/UI/backpackIcon.png")),
     (screen_width // 50, screen_width // 50)
 )
 exitActionUI = pygame.transform.scale(
-    pygame.image.load("pics/UI/ExitIcon.png"),
+    pygame.image.load(resource_path("pics/UI/ExitIcon.png")),
     (screen_width // 50, screen_width // 50)
 )
-
-menuIcon = pygame.image.load("pics/alt.png")
 
 white = Color.white
 black = Color.black
@@ -56,16 +54,19 @@ slots_start_y = start_y + background_height - padding - inventory_height
 
 class UI:
     def __init__(self, save_data, inventoryM):
+        self.save_data = save_data
+        self.inventoryM = inventoryM
+
         if not Save().IsSAVE_FILE:
             self.sec = 0
             self.min = 0
             self.hou = 7
             self.day = 1
         else:
-            self.sec = save_data['sec']
-            self.min = save_data['min']
-            self.hou = save_data['hou']
-            self.day = save_data['day']
+            self.sec = self.save_data['sec']
+            self.min = self.save_data['min']
+            self.hou = self.save_data['hou']
+            self.day = self.save_data['day']
             
         self.timeUI = font.render("44:44", True, black)
 
@@ -81,10 +82,14 @@ class UI:
 
         self.selected_item = None  # 선택된 아이템
 
-        self.inventoryM = inventoryM
-
         self.actionbar = ["inventory", "quest", "exit"]
         self.selected_action = 0
+
+    def save_update(self):
+        self.sec = self.save_data['sec']
+        self.min = self.save_data['min']
+        self.hou = self.save_data['hou']
+        self.day = self.save_data['day']
 
     def render(self, background):
         self.draw_playerUI(background)
@@ -92,10 +97,16 @@ class UI:
         # 마우스를 따라다니는 설치 준비 아이템
         if not self.selected_item == None and self.selected_item['IsBuilding']:
             mouse_x, mouse_y = pygame.mouse.get_pos()
-            img = pygame.image.load(self.selected_item["buildingimage"]).convert_alpha()
+            img = pygame.image.load(resource_path(self.selected_item["placeimage"])).convert_alpha()
             img = pygame.transform.scale(img, (screen_height // 5, screen_height // 5))
             img.set_alpha(128)  # 반투명 처리
-            screen.blit(img, (mouse_x - 25, mouse_y - 25))  # 중심에 맞춰 위치
+            screen.blit(img, (mouse_x - img.get_width() // 2, mouse_y - img.get_height() // 2))  # 중심에 맞춰 위치
+        elif not self.selected_item == None and self.selected_item['IsSeed']:
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+            img = pygame.image.load(resource_path(self.selected_item["placeimage"] + "1.png")).convert_alpha()
+            img = pygame.transform.scale(img, (screen_height // 20, screen_height // 20))
+            img.set_alpha(128)  # 반투명 처리
+            screen.blit(img, (mouse_x - img.get_width() // 2, mouse_y - img.get_height() // 2))  # 중심에 맞춰 위치
 
         if self.show_inventory:
             self.draw_basic_menu()
@@ -104,7 +115,7 @@ class UI:
             elif self.actionbar[self.selected_action] == "exit":
                 self.draw_exit()
 
-    def handle_event(self, event, dome):
+    def handle_event(self, event, dome, plant, background):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             mouse_x, mouse_y = event.pos
 
@@ -119,6 +130,8 @@ class UI:
 
             if self.show_inventory:
                 # 인벤토리가 열려 있을 때 슬롯 클릭 감지
+                self.selected_item = None  # 아이템 선택 초기화
+
                 for row in range(ROWS):
                     for col in range(COLS):
                         slot_x = slots_start_x + col * (SLOT_SIZE + SLOT_MARGIN)
@@ -131,21 +144,30 @@ class UI:
                                 self.selected_item_pos = (row, col)
                                 if self.selected_item['IsBuilding']:
                                     self.show_inventory = False  # 인벤토리 닫기
+                                elif self.selected_item['IsSeed'] and background.backgroundName == "GreenHouse":
+                                    self.show_inventory = False  # 인벤토리 닫기
                             return
             else:
-                if self.selected_item is not None and self.selected_item['IsBuilding']:
-                    if self.selected_item['buildingType'] == "dome":
-                        dome.IsConstructed = True
-                        dome.IsPlaced = True
-                        dome.x, dome.y = pygame.mouse.get_pos()
+                if self.selected_item is not None:
+                    if self.selected_item['IsBuilding']:
+                        if self.selected_item['placeType'] == "dome":
+                            dome.IsConstructed = True
+                            dome.IsPlaced = True
+                            x, y = pygame.mouse.get_pos()
+                            dome.x, dome.y = x - dome.img.get_height() // 2, y - dome.img.get_height() // 2
 
-                        sel_row, sel_col = self.selected_item_pos
-                        self.inventoryM.inventory[sel_row][sel_col] = None
+                            sel_row, sel_col = self.selected_item_pos
+                            self.inventoryM.inventory[sel_row][sel_col]["count"] -= 1
 
-                        self.selected_item = None  # 아이템 선택 해제
-                        self.selected_item_pos = None
+                            self.selected_item = None  # 아이템 선택 해제
+                            self.selected_item_pos = None
+                    elif self.selected_item['IsSeed']:
+                        if(plant.planting_click(pygame.mouse.get_pos(), self.selected_item['placeType'])):
+                            sel_row, sel_col = self.selected_item_pos
+                            self.inventoryM.inventory[sel_row][sel_col]["count"] -= 1
 
-
+                            self.selected_item = None  # 아이템 선택 해제
+                            self.selected_item_pos = None
     
     def update(self):
         self.sec += 1
@@ -161,6 +183,13 @@ class UI:
 
         time_str = f"{self.hou:02d}:{self.min:02d}"
         self.timeUI = font.render(time_str, True, white)
+
+        for row in range(ROWS):
+            for col in range(COLS):
+                item = self.inventoryM.inventory[row][col]
+                if item is not None:
+                    if item['count'] <= 0:
+                        self.inventoryM.inventory[row][col] = None  # 아이템 제거
 
     def draw_multiline_text(self, text, x, y, font, color, surface):
         lines = text.split('\n')  # 줄바꿈 기준으로 분리
@@ -230,6 +259,7 @@ class UI:
                     if slot_rect.collidepoint(mouse_x, mouse_y):
                         show_tooltip = True
                         tooltip_text = item["description"]
+                        count = item["count"]
                         tooltip_pos = (mouse_x, mouse_y)
 
         # 툴팁 표시
@@ -238,7 +268,7 @@ class UI:
             tooltip_font = small_font
             tooltip_line_height = tooltip_font.get_height()
             tooltip_width = max(tooltip_font.size(line)[0] for line in lines)
-            tooltip_height = len(lines) * tooltip_line_height
+            tooltip_height = (len(lines) + 1) * tooltip_line_height
 
             tooltip_bg = pygame.Rect(
                 tooltip_pos[0] + 10,
@@ -258,4 +288,8 @@ class UI:
                 tooltip_font,
                 white,
                 screen
+            ) 
+            screen.blit(
+                tooltip_font.render(f"{count}개", True, black),
+                (tooltip_pos[0] + 20, tooltip_height - tooltip_pos[1])
             )

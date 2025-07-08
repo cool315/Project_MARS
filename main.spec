@@ -1,11 +1,15 @@
 # -*- mode: python ; coding: utf-8 -*-
-
+# python -m PyInstaller main.spec
 
 a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[],
-    datas=[('font/neodgm.ttf', 'font')],
+    datas=[
+        ('font/neodgm.ttf', 'font'),
+        ("pics", "pics"),
+        ("save", "save")
+    ],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

@@ -7,14 +7,24 @@
         45,
         91
     ],
+    "playerSpeed": 10,
     "sec": 0,
     "min": 0,
     "hou": 7,
-    "day": 2,
+    "day": 3,
     "inventory": [
         [
             null,
-            null,
+            {
+                "name": "\uac10\uc790 \uc528\uc557",
+                "image": "pics/UI/items/potatoSeed.png",
+                "placeimage": "pics/plant/potato",
+                "IsBuilding": false,
+                "IsSeed": true,
+                "placeType": "potato",
+                "description": "\uac10\uc790 \uc528\uc557\n\n\uac10\uc790\ub294 \uace0\uc628\ub2e4\uc2b5\ud55c \ud658\uacbd\uc744 \uc81c\uc678\ud558\uba74 \uc798\uc790\ub77c\uace0\n\uc131\uc7a5\uc18d\ub3c4\uac00 \ube68\ub77c \ub300\ub7c9\uc0dd\uc0b0\uc774 \uac00\ub2a5\ud569\ub2c8\ub2e4.\n\n\ud654\uc131\uc5d0 \ud759\uc5d0 \uc2ec\uc744 \uc21c \uc5c6\uc9c0\ub9cc \uc628\uc2e4\uc5d4 \uc2ec\uc744 \uc218 \uc788\uc2b5\ub2c8\ub2e4.",
+                "count": 62
+            },
             null,
             null,
             null,
@@ -52,7 +62,100 @@
     "background": "dome",
     "IsDomeCons": true,
     "DomePos": [
-        558,
-        158
+        574,
+        154
+    ],
+    "greenHouse": [
+        [
+            {
+                "dirtStatus": "dry",
+                "type": "potato",
+                "grow": 1,
+                "harvestable": false
+            },
+            {
+                "dirtStatus": "dry"
+            },
+            {
+                "dirtStatus": "dry"
+            },
+            {
+                "dirtStatus": "dry"
+            },
+            {
+                "dirtStatus": "dry"
+            }
+        ],
+        [
+            {
+                "dirtStatus": "dry"
+            },
+            {
+                "dirtStatus": "dry"
+            },
+            {
+                "dirtStatus": "dry"
+            },
+            {
+                "dirtStatus": "dry",
+                "type": "potato",
+                "grow": 0,
+                "harvestable": false
+            },
+            {
+                "dirtStatus": "dry"
+            }
+        ],
+        [
+            {
+                "dirtStatus": "dry"
+            },
+            {
+                "dirtStatus": "dry"
+            },
+            {
+                "dirtStatus": "dry"
+            },
+            {
+                "dirtStatus": "dry"
+            },
+            {
+                "dirtStatus": "dry"
+            }
+        ],
+        [
+            {
+                "dirtStatus": "dry"
+            },
+            {
+                "dirtStatus": "dry"
+            },
+            {
+                "dirtStatus": "dry"
+            },
+            {
+                "dirtStatus": "dry"
+            },
+            {
+                "dirtStatus": "dry"
+            }
+        ],
+        [
+            {
+                "dirtStatus": "dry"
+            },
+            {
+                "dirtStatus": "dry"
+            },
+            {
+                "dirtStatus": "dry"
+            },
+            {
+                "dirtStatus": "dry"
+            },
+            {
+                "dirtStatus": "dry"
+            }
+        ]
     ]
 }

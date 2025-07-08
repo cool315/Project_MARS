@@ -2,7 +2,7 @@
 import pygame
 import cv2
 
-from py.setting import Font, Color
+from py.setting import Font, Color, resource_path
 
 small_font = Font().small_font
 
@@ -21,7 +21,7 @@ class Ending:
         self.ending_credit(screen)
 
     def ending_vid(self, screen):
-        cap = cv2.VideoCapture("") #여기다 엔딩 영상
+        cap = cv2.VideoCapture(resource_path("")) #여기다 엔딩 영상
         fps = cap.get(cv2.CAP_PROP_FPS)
         if fps <= 1 or fps > 60:
             fps = 30

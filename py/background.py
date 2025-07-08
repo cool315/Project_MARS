@@ -1,7 +1,7 @@
 import pygame
 import pygame.image
 
-from py.setting import Screen, Font, Color
+from py.setting import Screen, Font, Color, resource_path
 
 screen = Screen().screen
 screen_width, screen_height = Screen().screen_width, Screen().screen_height
@@ -15,7 +15,7 @@ class backgroundElementControl:
     def __init__(self, background):
         self.backgroundName = background
 
-        self.background = pygame.image.load("pics/backgrounds/marsBackground1.png")
+        self.background = pygame.image.load(resource_path("pics/backgrounds/marsBackground1.png"))
         self.background = pygame.transform.scale(self.background, (screen_width, screen_height))
 
         self.backgroundItems = None
@@ -47,7 +47,7 @@ class backgroundElementControl:
                 screen.blit(tooltip, (self.bed_rect.right + 10, self.bed_rect.top))
 
     def outSide(self):
-        self.background = pygame.image.load("pics/backgrounds/marsBackground1.png")
+        self.background = pygame.image.load(resource_path("pics/backgrounds/marsBackground1.png"))
         self.background = pygame.transform.scale(self.background, (screen_width, screen_height))
         self.backgroundName = "outside"
 
@@ -57,7 +57,7 @@ class backgroundElementControl:
         self.backgroundItems = None
 
     def InsideSpaceShip(self):
-        self.background = pygame.image.load("pics/backgrounds/SpaceShipInside.png")
+        self.background = pygame.image.load(resource_path("pics/backgrounds/SpaceShipInside.png"))
         self.background = pygame.transform.scale(self.background, (screen_width, screen_height))
         self.backgroundName = "SpaceshipInside"
 
@@ -66,19 +66,19 @@ class backgroundElementControl:
         self.backgroundItems = None
 
     def InsideDome(self):
-        self.background = pygame.image.load("pics/backgrounds/DomeInside.png")
+        self.background = pygame.image.load(resource_path("pics/backgrounds/DomeInside.png"))
         self.background = pygame.transform.scale(self.background, (screen_width, screen_height))
         self.backgroundName = "DomeInside"
 
         self.is_inside_dome = True
 
-        self.bed = pygame.image.load("pics/items/bed.png")
+        self.bed = pygame.image.load(resource_path("pics/items/bed.png"))
         self.bed = pygame.transform.scale(self.bed, (screen_width // 10, screen_height // 10))
         self.bed_x = screen_width // 2
         self.bed_y = screen_height - screen_height // 10 - self.bed.get_height()
         self.bed_rect = self.bed.get_rect(topleft=(self.bed_x, self.bed_y))  # 침대 영역 저장
 
-        self.monitor = pygame.image.load("pics/items/monitor.png")
+        self.monitor = pygame.image.load(resource_path("pics/items/monitor.png"))
         self.monitor = pygame.transform.scale(self.monitor, (screen_width // 10, screen_height // 10))
         monitor_x = screen_width // 2
         monitor_y = screen_height // 10 + self.monitor.get_height()
@@ -90,7 +90,7 @@ class backgroundElementControl:
         ]
 
     def computer(self):
-        self.background = pygame.image.load("pics/backgrounds/windowXp.png")
+        self.background = pygame.image.load(resource_path("pics/backgrounds/windowXp.png"))
         self.background = pygame.transform.scale(self.background, (screen_width, screen_height))
         self.backgroundName = "Computer"
 
@@ -99,7 +99,7 @@ class backgroundElementControl:
         self.backgroundItems = None
 
     def insideGreenHouse(self):
-        self.background = pygame.image.load("pics/backgrounds/PlantingRoom.png")
+        self.background = pygame.image.load(resource_path("pics/backgrounds/PlantingRoom.png"))
         self.background = pygame.transform.scale(self.background, (screen_width, screen_height))
         self.backgroundName = "GreenHouse"
 
